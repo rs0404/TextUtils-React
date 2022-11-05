@@ -24,9 +24,7 @@ export default function TextForm(props) {
     }
 
     const handleCopy = ()=> {
-        var text = document.getElementById('myBox');
-        text.select();
-        navigator.clipboard.writeText(text.value);
+        navigator.clipboard.writeText(text);
         props.showAlert("Text has been copied", "success");
     }
 
@@ -48,17 +46,17 @@ export default function TextForm(props) {
         props.showAlert("String jumbled", "success");
     }
 
-    const wordCount = (word)=> {
-        const textSplitArray = word.split(" ");
-        let length = 0;
-        for (let i = 0; i < textSplitArray.length; i++) {
-            length ++;
-            if (textSplitArray[i] === '') {
-                length -= 1;
-            }
-        }
-        return length;
-    }
+    // const wordCount = (word)=> {
+    //     const textSplitArray = word.split(" ");
+    //     let length = 0;
+    //     for (let i = 0; i < textSplitArray.length; i++) {
+    //         length ++;
+    //         if (textSplitArray[i] === '') {
+    //             length -= 1;
+    //         }
+    //     }
+    //     return length;
+    // }
 
     const [text, setText] = useState('');    // Defining state with name text, setText funciton to update text state and initial value inside useState()
   
@@ -67,21 +65,21 @@ export default function TextForm(props) {
         <div className = "container" style={{color: props.mode==='light'?'black':'white'}}> 
             <h1>{props.heading}</h1>
             <div className="mb-3">
-                <textarea className="form-control" value={text} onChange={handleOnChange} id="myBox" rows="8" style = {{backgroundColor: props.mode==='light'?'white':'grey'}}></textarea>
+                <textarea className="form-control" value={text} onChange={handleOnChange} id="myBox" rows="8" style = {{backgroundColor: props.mode==='light'?'white':'grey', color: props.mode==='light'?'black':'white'}}></textarea>
             </div>
-            <button className="btn btn-primary" onClick={handleLoClick}>Convert to Lowercase</button>
-            <button className="btn btn-primary mx-3" onClick={handleUpClick}>Convert to Uppercase</button>
-            <button className="btn btn-primary mx-3" onClick={handleJumble}>Jumble Text</button>
-            <button className="btn btn-primary mx-3" onClick={handleClear}>Clear Text</button>
-            <button className="btn btn-primary mx-3" onClick={handleCopy}>Copy Text</button>
-            <button className="btn btn-primary mx-3" onClick={handleExtraSpaces}>Remove Extra Spaces</button>
+            <button className="btn btn-primary" disabled={text.length===0} onClick={handleLoClick}>Convert to Lowercase</button>
+            <button className="btn btn-primary mx-1 my-1" disabled={text.length===0} onClick={handleUpClick}>Convert to Uppercase</button>
+            <button className="btn btn-primary mx-1 my-1" disabled={text.length===0} onClick={handleJumble}>Jumble Text</button>
+            <button className="btn btn-primary mx-1 my-1" disabled={text.length===0} onClick={handleClear}>Clear Text</button>
+            <button className="btn btn-primary mx-1 my-1" disabled={text.length===0} onClick={handleCopy}>Copy Text</button>
+            <button className="btn btn-primary mx-1 my-1" disabled={text.length===0} onClick={handleExtraSpaces}>Remove Extra Spaces</button>
         </div>
         <div className="container my-3" style={{color: props.mode==='light'?'black':'white'}}>
             <h1>Your text summary</h1>
-            <p>{wordCount(text)} and {text.length}</p>
-            <p>{0.008 * text.split(" ").length} minutes to read</p>
+            <p>{text.split(/\s+/).filter((element)=>{return element.length !== 0}).length} words and {text.length} characters in your text</p>
+            <p>{0.008 * text.split(" ").filter((element)=>{return element.length !== 0}).length} minutes to read</p>
             <h2>Preview</h2>
-            <p>{text===''?'Enter text in the above box to preview': text}</p>
+            <p>{text===''?'Nothing to preview': text}</p>
         </div>
         </>
     )
